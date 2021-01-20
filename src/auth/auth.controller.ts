@@ -6,7 +6,7 @@ import {
   Res,
   Get,
   Req,
-  UnauthorizedException,
+  UnauthorizedException, UseInterceptors, ClassSerializerInterceptor, UseGuards,
 } from '@nestjs/common';
 import { ApiTags, ApiCookieAuth } from '@nestjs/swagger';
 import * as bcrypt from 'bcryptjs';
@@ -15,9 +15,11 @@ import { UsersService } from '../user/users.service';
 import { LoginDto } from './dtos/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import { Response, Request } from 'express';
+import { AuthGuard } from './auth.guard';
 
 @ApiCookieAuth()
 @ApiTags('Auth Module')
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('api/v1')
 export class AuthController {
   constructor(
@@ -35,6 +37,7 @@ export class AuthController {
   async login(
     @Body() data: LoginDto,
     @Res({ passthrough: true }) response: Response,
+    // eslint-disable-next-line @typescript-eslint/ban-types
   ): Promise<Object> {
     const user = await this.userService.findOne(data);
     if (!user) {
@@ -52,6 +55,8 @@ export class AuthController {
     return { token: jwt };
   }
 
+
+  @UseGuards(AuthGuard)
   @Get('user')
   async user(@Req() request: Request) {
     const cookie = request.cookies['jwt'];
@@ -66,8 +71,14 @@ export class AuthController {
 
           return user
       })
-      .catch(err => {
-        throw new UnauthorizedException(err.message);
-      });
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('logout')
+  async logout(@Res({ passthrough: true }) response: Response) {
+    response.clearCookie('jwt')
+    return {
+      message: 'Success'
+    }
   }
 }

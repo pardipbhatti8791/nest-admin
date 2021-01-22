@@ -2,21 +2,23 @@ import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { AuthGuard } from '../auth/auth.guard';
 import { ApiTags } from '@nestjs/swagger';
+import { ProductDto } from './dtos/product.dto';
+import { PaginationDto } from '../user/dtos/pagination.dto';
 
 @UseGuards(AuthGuard)
-@ApiTags('Roles Module')
+@ApiTags('Product Module')
 @Controller('api/v1')
 export class ProductsController {
   constructor(private productsService: ProductsService) {
   }
 
-  @Get()
-  async all(@Query('page') page = 1) {
-    return this.productsService.paginate(page)
+  @Get('get-products')
+  async all(@Query() pageData: PaginationDto) {
+    return this.productsService.paginate(pageData.page)
   }
 
-  @Post('createProduct')
-  async create(@Body() body) {
-
+  @Post('create-product')
+  async create(@Body() body: ProductDto) {
+    return this.productsService.create(body)
   }
 }

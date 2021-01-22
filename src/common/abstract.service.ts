@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const bcrypt = require('bcryptjs');
 
 @Injectable()
 export abstract class AbstractService {
@@ -37,8 +35,6 @@ export abstract class AbstractService {
   }
 
   async create(data): Promise<any> {
-    const hashed = await bcrypt.hash(data.password, 12);
-    data.password = hashed;
     return this.repository.save(data);
   }
 

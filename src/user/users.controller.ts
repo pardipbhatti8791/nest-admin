@@ -16,6 +16,9 @@ import { AuthGuard } from 'src/auth/auth.guard';
 import { PaginationDto } from './dtos/pagination.dto';
 import { UserDto } from './dtos/user.dto';
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const bcrypt = require('bcryptjs');
+
 
 @ApiTags('Users Module')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -35,10 +38,13 @@ export class UsersController {
   @Post('auth/signup')
   async create(@Body() user: UserDto): Promise<User> {
 
-    const { role_id, ...data } = user
+    const { role_id, password, ...data } = user
+
+    const hashed = await bcrypt.hash(password, 12)
 
     return this.userService.create({
       ...data,
+      password: hashed,
       role: {
         id: role_id
       }

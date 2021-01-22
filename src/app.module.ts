@@ -8,6 +8,7 @@ import { CommonModule } from './common/common.module';
 import { RolesModule } from './roles/roles.module';
 import { PermissionModule } from './permission/permission.module';
 import { ProductsModule } from './products/products.module';
+import { UploadController } from './products/upload/upload.controller';
 
 @Module({
   imports: [

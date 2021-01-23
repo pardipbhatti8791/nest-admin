@@ -2,13 +2,14 @@ import {
   Controller,
   UseInterceptors,
   UploadedFile,
-  Post,
+  Post, Get, Param, Res,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags, ApiConsumes } from '@nestjs/swagger';
 import { ApiImplicitFile } from '@nestjs/swagger/dist/decorators/api-implicit-file.decorator';
 import { diskStorage } from 'multer'
 import { extname } from 'path'
+import { Response } from 'express'
 
 @ApiTags('Upload Module')
 @Controller('api/v1')
@@ -32,6 +33,13 @@ export class UploadController {
     }),
   )
   uploadFile(@UploadedFile() file) {
-    console.log(file);
+    return {
+      url: `http://localhost:8000/api/${file.path}`
+    }
+  }
+
+  @Get('uploads/:path')
+  async getImage(@Param('path') path, @Res() res: Response) {
+    res.sendFile(path, { root: 'uploads' })
   }
 }

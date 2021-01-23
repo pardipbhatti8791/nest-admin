@@ -9,6 +9,9 @@ import { RolesModule } from './roles/roles.module';
 import { PermissionModule } from './permission/permission.module';
 import { ProductsModule } from './products/products.module';
 import { UploadController } from './products/upload/upload.controller';
+import { OrdersModule } from './orders/orders.module';
+import { APP_GUARD } from '@nestjs/core';
+import { PermissionGuard } from './permission/permission.guard';
 
 @Module({
   imports: [
@@ -30,9 +33,15 @@ import { UploadController } from './products/upload/upload.controller';
     CommonModule,
     RolesModule,
     PermissionModule,
-    ProductsModule
+    ProductsModule,
+    OrdersModule
   ],
   controllers: [AppController],
-  providers: [],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: PermissionGuard
+    }
+  ],
 })
 export class AppModule {}

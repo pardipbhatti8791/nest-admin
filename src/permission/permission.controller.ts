@@ -2,6 +2,7 @@ import { ClassSerializerInterceptor, Controller, Get, UseGuards, UseInterceptors
 import { PermissionService } from './permission.service';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '../auth/auth.guard';
+import { HasPermission } from './has-permission.decorator';
 
 @ApiTags('Permission Module')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -12,6 +13,7 @@ export class PermissionController {
   }
 
   @Get('permissions')
+  @HasPermission("view_permissions")
   async all(): Promise<any> {
     return this.permissionService.all()
   }

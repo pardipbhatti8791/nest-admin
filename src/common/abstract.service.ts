@@ -42,7 +42,7 @@ export abstract class AbstractService {
     return await this.repository.findOne({ email: data.email }, { relations });
   }
 
-  async findUserById(id): Promise<any> {
-    return await this.repository.findOne({ id: id });
+  async findUserById(id, relations = []): Promise<any> {
+    return await this.repository.findOne({ id: id }, { relations });
   }
 }

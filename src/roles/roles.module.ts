@@ -8,6 +8,7 @@ import { CommonModule } from '../common/common.module';
 @Module({
   imports: [TypeOrmModule.forFeature([Role]), CommonModule],
   controllers: [RolesController],
-  providers: [RolesService]
+  providers: [RolesService],
+  exports: [RolesService]
 })
 export class RolesModule {}

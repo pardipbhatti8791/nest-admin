@@ -11,10 +11,10 @@ import {
 import { UsersService } from './users.service';
 import { ApiTags } from '@nestjs/swagger';
 import { User } from './models/user.entity';
-import { SignupDto } from '../auth/dtos/signup.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { PaginationDto } from './dtos/pagination.dto';
 import { UserDto } from './dtos/user.dto';
+import { HasPermission } from '../permission/has-permission.decorator';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const bcrypt = require('bcryptjs');
@@ -29,10 +29,11 @@ export class UsersController {
   constructor(private userService: UsersService) {
   }
 
-  @Get()
+  @Get('users/all')
+  @HasPermission("edit_users")
   all(@Query() data: PaginationDto) {
     const { page } = data
-    return this.userService.paginate(page, ['role'])
+    return this.userService.paginates(page, ['role'])
   }
 
   @Post('auth/signup')

@@ -16,7 +16,7 @@ export class UsersService extends AbstractService {
     return await this.userRepository.find();
   }
 
-  async paginate(page = 1, relations = []): Promise<any> {
+  async paginates(page = 1, relations = []): Promise<any> {
     const { data, meta } = await super.paginate(page, relations);
     return {
       data: data.map(user => {
